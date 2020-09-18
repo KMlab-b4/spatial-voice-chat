@@ -8,17 +8,97 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.8.0/fingerprint2.min.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src='client.js'></script>
     <title>SpacialVoiceChatApplication</title>
+    <style>
+        #canvas {
+            background: gray;
+        }
+    </style>
 </head>
-<body>
+<body onload="init()">
     <h1>Chat Application</h1>
     <!--chat-->
-    <form id="message_form" action="#">
-        <input id="input_msg" autocomplete="off" />
-        <button>Send</button>
-    </form>
-    <ul id="messages"></ul>
+    <div id="chatScreen">
+        <canvas id="canvas" width="320" height="320"></canvas>
+        <form id="message_form" action="#">
+            <input id="input_msg" autocomplete="off" />
+            <button>Send</button>
+        </form>
+        <ul id="messages"></ul>
+    </div>
 
-    <script src='client.js'></script>
+    <script>
+        let canvas = document.getElementById("canvas");
+        let context = canvas.getContext("2d");
+        var objX, objY;
+        var objWidth, objHeight;
+
+        function init() {
+        // オブジェクトの大きさを定義
+            objWidth = 50;
+            objHeight = 50;
+
+            // オブジェクトの座標を定義(キャンバスの中央に表示)
+            objX = canvas.width / 2 - objWidth / 2;
+            objY = canvas.height / 2 - objHeight / 2;
+
+            // オブジェクトを描画
+            drawRect();
+        }
+
+        function drawRect() {
+            context.fillRect(objX, objY, objWidth, objHeight);
+        }
+        var x, y, relX, relY;
+        var dragging = false;
+
+        function onDown(e) {
+            // キャンバスの左上端の座標を取得
+            var offsetX = canvas.getBoundingClientRect().left;
+            var offsetY = canvas.getBoundingClientRect().top;
+
+            // マウスが押された座標を取得
+            x = e.clientX - offsetX;
+            y = e.clientY - offsetY;
+
+            // オブジェクト上の座標かどうかを判定
+            if (objX < x && (objX + objWidth) > x && objY < y && (objY + objHeight) > y) {
+                dragging = true; // ドラッグ開始
+                relX = objX - x;
+                relY = objY - y;
+            }
+        }
+
+        canvas.addEventListener('mousedown', onDown, false);
+        function onMove(e) {
+            // キャンバスの左上端の座標を取得
+            var offsetX = canvas.getBoundingClientRect().left;
+            var offsetY = canvas.getBoundingClientRect().top;
+
+            // マウスが移動した先の座標を取得
+            x = e.clientX - offsetX;
+            y = e.clientY - offsetY;
+
+            // ドラッグが開始されていればオブジェクトの座標を更新して再描画
+            if (dragging) {
+                objX = x + relX;
+                objY = y + relY;
+                drawRect();
+            }
+        }
+
+        function onUp(e) {
+            dragging = false; // ドラッグ終了
+        }
+
+        function drawRect() {
+            context.clearRect(0, 0, canvas.width, canvas.height); // キャンバスをクリア
+            context.fillRect(objX, objY, objWidth, objHeight);
+        }
+
+        canvas.addEventListener('mousemove', onMove, false);
+        canvas.addEventListener('mouseup', onUp, false);
+    </script>
 </body>
 </html>
