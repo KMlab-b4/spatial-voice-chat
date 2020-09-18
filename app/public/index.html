@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.8.0/fingerprint2.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <title>SpacialVoiceChatApplication</title>
+</head>
+<body>
+    <h1>Chat Application</h1>
+    <!--chat-->
+    <form id="message_form" action="#">
+        <input id="input_msg" autocomplete="off" />
+        <button>Send</button>
+    </form>
+    <ul id="messages"></ul>
+
+    <script src='client.js'></script>
+</body>
+</html>
