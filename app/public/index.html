@@ -1,24 +1,50 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.8.0/fingerprint2.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <title>SpacialVoiceChatApplication</title>
-</head>
-<body>
-    <h1>Chat Application</h1>
-    <!--chat-->
-    <form id="message_form" action="#">
-        <input id="input_msg" autocomplete="off" />
-        <button>Send</button>
-    </form>
-    <ul id="messages"></ul>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkyWay - Room example</title>
+    <link rel="stylesheet" href="../_shared/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="heading">Room example</h1>
+      <p class="note">
+        <!--モードをsfuに固定するために一時コメントアウト
+        Change Room mode (before join in a room):
+        -->
+        <!--meshかsfuかを選択させる-->
+        <!--
+        <a href="#">mesh</a> / <a href="#sfu">sfu</a>
+        
+        <a href="#sfu">sfu</a>
+        -->
+      </p>
+      <div class="room">
+        <div>
+          <video id="js-local-stream"></video>
+          <span id="js-room-mode"></span>:
+          <br>
+          <input type="text" placeholder="Room Name" id="js-room-id">
+          <!--ユーザーネームを示す-->
+          <input type="text" placeholder="User Name" id="js-username"><br>
+          
+          <button id="js-join-trigger">Join</button>
+          <button id="js-leave-trigger">Leave</button>
+        </div>
 
-    <script src='client.js'></script>
-</body>
+        <div class="remote-streams" id="js-remote-streams"></div>
+
+        <div>
+          <pre class="messages" id="js-messages"></pre>
+          <input type="text" id="js-local-text">
+          <button id="js-send-trigger">Send</button>
+        </div>
+      </div>
+      <p class="meta" id="js-meta"></p>
+    </div>
+    <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script src="../_shared/key.js"></script>
+    <script src="./script.js"></script>
+  </body>
 </html>
