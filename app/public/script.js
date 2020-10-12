@@ -12,9 +12,9 @@ const Peer = window.Peer;
   const messages = document.getElementById('js-messages');
   const meta = document.getElementById('js-meta');
   const sdkSrc = document.querySelector('script[src*=skyway]');
-  // new 
+  // new
   const userName = document.getElementById('js-username');
-
+  const confirm = document.getElementById('js-confirm-trigger');
   meta.innerText = `
     UA: ${navigator.userAgent}
     SDK: ${sdkSrc ? sdkSrc.src : 'unknown'}
@@ -60,6 +60,12 @@ const Peer = window.Peer;
     debug: 3,
   }));
 
+  confirm.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-confirm').style.display = "inline-block";
+    document.getElementById('room-name').innerHTML = userName.value;
+    document.getElementById('user-name').innerHTML = roomId.value;
+  });
   // Register join handler
   // 結合ハンドラを登録する
   joinTrigger.addEventListener('click', () => {
@@ -72,8 +78,12 @@ const Peer = window.Peer;
       return;
     }
 
+    // 表示の切り替え
+    document.getElementById('js-confirm').style.display = "none";
+    document.getElementById('js-container').style.display = "inline-block";
+
     // 部屋に参加する
-    // 
+    //
     const room = peer.joinRoom(roomId.value, {
       mode: getRoomModeByHash(),
       stream: localStream,
@@ -98,7 +108,7 @@ const Peer = window.Peer;
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
-      
+
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
       wVideo.setAttribute('data-peer-id', stream.peerId);
