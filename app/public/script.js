@@ -1,4 +1,5 @@
 const Peer = window.Peer;
+const socketio = io();
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -12,8 +13,15 @@ const Peer = window.Peer;
   const messages = document.getElementById('js-messages');
   const meta = document.getElementById('js-meta');
   const sdkSrc = document.querySelector('script[src*=skyway]');
-  // new 
+  // new
   const userName = document.getElementById('js-username');
+  const confirmCreate = document.getElementById('js-confirm-create-trigger');
+  const confirmJoin = document.getElementById('js-confirm-join-trigger');
+  const entranceSetting = document.getElementById('js-entrance-setting-trigger');
+  const muteBtn = document.getElementById('js-mute-trigger');
+  const roomSetting = document.getElementById('js-room-setting-trigger');
+  const returnEntrance = document.getElementById('js-return-entrance-trigger');
+  const returnRoom = document.getElementById('js-return-room-trigger');
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -60,6 +68,31 @@ const Peer = window.Peer;
     debug: 3,
   }));
 
+  confirmCreate.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-confirm').style.display = "inline-block";
+  });
+  confirmJoin.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-confirm').style.display = "inline-block";
+  });
+  entranceSetting.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-setting').style.display = "inline-block";
+  });
+  roomSetting.addEventListener('click', () => {
+    document.getElementById('js-container').style.display = "none";
+    document.getElementById('js-setting').style.display = "inline-block";
+  });
+  returnEntrance.addEventListener('click', () => {
+    document.getElementById('js-setting').style.display = "none";
+    document.getElementById('js-entrance').style.display = "inline-block";
+  });
+  returnRoom.addEventListener('click', () => {
+    document.getElementById('js-setting').style.display = "none";
+    document.getElementById('js-container').style.display = "inline-block";
+  });
+
   // Register join handler
   // 結合ハンドラを登録する
   joinTrigger.addEventListener('click', () => {
@@ -72,8 +105,12 @@ const Peer = window.Peer;
       return;
     }
 
+    // 表示の切り替え
+    document.getElementById('js-confirm').style.display = "none";
+    document.getElementById('js-container').style.display = "inline-block";
+
     // 部屋に参加する
-    // 
+    //
     const room = peer.joinRoom(roomId.value, {
       mode: getRoomModeByHash(),
       stream: localStream,
@@ -98,7 +135,7 @@ const Peer = window.Peer;
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
-      
+
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
       wVideo.setAttribute('data-peer-id', stream.peerId);
@@ -140,7 +177,11 @@ const Peer = window.Peer;
     });
 
     sendTrigger.addEventListener('click', onClickSend);
-    leaveTrigger.addEventListener('click', () => room.close(), { once: true });
+    leaveTrigger.addEventListener('click', () => {
+      room.close()
+      document.getElementById('js-confirm').style.display = "inline-block";
+      document.getElementById('js-container').style.display = "none";
+    }, { once: true });
 
     function onClickSend() {
       // Send message to all of the peers in the room via websocket
@@ -156,3 +197,11 @@ const Peer = window.Peer;
 
   peer.on('error', console.error);
 })();
+
+$(function(){
+  $('#message_form').submit(function(){
+    socketio.emit('message', $('#input_msg').val());
+    $('#input_msg').val('');
+    return false;
+  })
+})

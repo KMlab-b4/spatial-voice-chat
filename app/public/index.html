@@ -4,10 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SkyWay - Room example</title>
-    <link rel="stylesheet" href="../_shared/style.css">
+    <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <div class="container">
+<!-- 入口 -->>
+    <div class="entrance" id="js-entrance">
+      <button id="js-confirm-create-trigger">作成</button>
+      <button id="js-confirm-join-trigger">参加</button>
+      <button id="js-entrance-setting-trigger">設定</button>
+    </div>
+<!-- 確認 -->
+    <div id="js-confirm" style="display: none;">
+      <input type="text" placeholder="Room Name" id="js-room-id">
+      <!--ユーザーネームを示す-->
+      <input type="text" placeholder="User Name" id="js-username"><br>
+
+      <button id="js-join-trigger">Join</button>>
+    </div>
+<!-- 通話 -->
+    <div class="container" id="js-container" style="display: none;">
       <h1 class="heading">Room example</h1>
       <p class="note">
         <!--モードをsfuに固定するために一時コメントアウト
@@ -24,13 +39,9 @@
         <div>
           <video id="js-local-stream"></video>
           <span id="js-room-mode"></span>:
-          <br>
-          <input type="text" placeholder="Room Name" id="js-room-id">
-          <!--ユーザーネームを示す-->
-          <input type="text" placeholder="User Name" id="js-username"><br>
-          
-          <button id="js-join-trigger">Join</button>
           <button id="js-leave-trigger">Leave</button>
+          <button id="js-mute-trigger">Mute</button>
+          <button id="js-room-setting-trigger"></button>
         </div>
 
         <div class="remote-streams" id="js-remote-streams"></div>
@@ -40,11 +51,45 @@
           <input type="text" id="js-local-text">
           <button id="js-send-trigger">Send</button>
         </div>
+
+        <div>
+          <form id="message_form">
+            <input id="input_msg" autocomplete="off"/>
+            <button>test Send</button>
+          </form>
+        </div>>
       </div>
       <p class="meta" id="js-meta"></p>
     </div>
+<!-- 設定 -->
+    <div id="js-setting" style="display: none;">
+      設定
+      <button id="js-return-entrance-trigger">Entranceに戻る</button>
+      <button id="js-return-room-trigger">Roomに戻る</button>
+    </div>
     <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="../_shared/key.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
+
+<!--
+  entranceページ
+    入室ボタン
+    作成ボタン
+    設定ボタン
+  inputページ
+    roomId入力フォーム
+    userId入力フォーム
+    送信ボタン
+  roomページ
+    マイクのミュート
+    退室
+    設定
+  settingページ
+    マイクのセレクト
+
+-->
