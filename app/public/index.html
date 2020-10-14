@@ -9,16 +9,16 @@
   <body>
 <!-- 入口 -->>
     <div class="entrance" id="js-entrance">
+      <button id="js-confirm-create-trigger">作成</button>
+      <button id="js-confirm-join-trigger">参加</button>
+      <button id="js-entrance-setting-trigger">設定</button>
+    </div>
+<!-- 確認 -->
+    <div id="js-confirm" style="display: none;">
       <input type="text" placeholder="Room Name" id="js-room-id">
       <!--ユーザーネームを示す-->
       <input type="text" placeholder="User Name" id="js-username"><br>
 
-      <button id="js-confirm-trigger">Join</button>
-    </div>
-<!-- 確認 -->
-    <div id="js-confirm" style="display: none;">
-      <span id="room-name"></span>
-      <span id="user-name"></span>
       <button id="js-join-trigger">Join</button>>
     </div>
 <!-- 通話 -->
@@ -40,6 +40,8 @@
           <video id="js-local-stream"></video>
           <span id="js-room-mode"></span>:
           <button id="js-leave-trigger">Leave</button>
+          <button id="js-mute-trigger">Mute</button>
+          <button id="js-room-setting-trigger"></button>
         </div>
 
         <div class="remote-streams" id="js-remote-streams"></div>
@@ -62,6 +64,8 @@
 <!-- 設定 -->
     <div id="js-setting" style="display: none;">
       設定
+      <button id="js-return-entrance-trigger">Entranceに戻る</button>
+      <button id="js-return-room-trigger">Roomに戻る</button>
     </div>
     <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>

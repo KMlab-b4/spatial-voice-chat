@@ -15,7 +15,14 @@ const socketio = io();
   const sdkSrc = document.querySelector('script[src*=skyway]');
   // new
   const userName = document.getElementById('js-username');
-  const confirm = document.getElementById('js-confirm-trigger');
+  const confirmCreate = document.getElementById('js-confirm-create-trigger');
+  const confirmJoin = document.getElementById('js-confirm-join-trigger');
+  const entranceSetting = document.getElementById('js-entrance-setting-trigger');
+  const muteBtn = document.getElementById('js-mute-trigger');
+  const roomSetting = document.getElementById('js-room-setting-trigger');
+  const returnEntrance = document.getElementById('js-return-entrance-trigger');
+  const returnRoom = document.getElementById('js-return-room-trigger');
+
   meta.innerText = `
     UA: ${navigator.userAgent}
     SDK: ${sdkSrc ? sdkSrc.src : 'unknown'}
@@ -61,12 +68,31 @@ const socketio = io();
     debug: 3,
   }));
 
-  confirm.addEventListener('click', () => {
+  confirmCreate.addEventListener('click', () => {
     document.getElementById('js-entrance').style.display = "none";
     document.getElementById('js-confirm').style.display = "inline-block";
-    document.getElementById('room-name').innerHTML = userName.value;
-    document.getElementById('user-name').innerHTML = roomId.value;
   });
+  confirmJoin.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-confirm').style.display = "inline-block";
+  });
+  entranceSetting.addEventListener('click', () => {
+    document.getElementById('js-entrance').style.display = "none";
+    document.getElementById('js-setting').style.display = "inline-block";
+  });
+  roomSetting.addEventListener('click', () => {
+    document.getElementById('js-container').style.display = "none";
+    document.getElementById('js-setting').style.display = "inline-block";
+  });
+  returnEntrance.addEventListener('click', () => {
+    document.getElementById('js-setting').style.display = "none";
+    document.getElementById('js-entrance').style.display = "inline-block";
+  });
+  returnRoom.addEventListener('click', () => {
+    document.getElementById('js-setting').style.display = "none";
+    document.getElementById('js-container').style.display = "inline-block";
+  });
+
   // Register join handler
   // 結合ハンドラを登録する
   joinTrigger.addEventListener('click', () => {
