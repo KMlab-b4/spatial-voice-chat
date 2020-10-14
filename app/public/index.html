@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
+<!-- 入口 -->>
     <div class="entrance" id="js-entrance">
       <input type="text" placeholder="Room Name" id="js-room-id">
       <!--ユーザーネームを示す-->
@@ -14,11 +15,13 @@
 
       <button id="js-confirm-trigger">Join</button>
     </div>
+<!-- 確認 -->
     <div id="js-confirm" style="display: none;">
       <span id="room-name"></span>
       <span id="user-name"></span>
       <button id="js-join-trigger">Join</button>>
     </div>
+<!-- 通話 -->
     <div class="container" id="js-container" style="display: none;">
       <h1 class="heading">Room example</h1>
       <p class="note">
@@ -36,7 +39,6 @@
         <div>
           <video id="js-local-stream"></video>
           <span id="js-room-mode"></span>:
-          <br>
           <button id="js-leave-trigger">Leave</button>
         </div>
 
@@ -47,14 +49,43 @@
           <input type="text" id="js-local-text">
           <button id="js-send-trigger">Send</button>
         </div>
+
+        <div>
+          <form id="message_form">
+            <input id="input_msg" autocomplete="off"/>
+            <button>test Send</button>
+          </form>
+        </div>>
       </div>
       <p class="meta" id="js-meta"></p>
     </div>
+<!-- 設定 -->
     <div id="js-setting" style="display: none;">
       設定
     </div>
     <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="../_shared/key.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
+
+<!--
+  entranceページ
+    入室ボタン
+    作成ボタン
+    設定ボタン
+  inputページ
+    roomId入力フォーム
+    userId入力フォーム
+    送信ボタン
+  roomページ
+    マイクのミュート
+    退室
+    設定
+  settingページ
+    マイクのセレクト
+
+-->

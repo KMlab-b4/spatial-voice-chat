@@ -1,4 +1,5 @@
 const Peer = window.Peer;
+const socketio = io();
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -150,7 +151,11 @@ const Peer = window.Peer;
     });
 
     sendTrigger.addEventListener('click', onClickSend);
-    leaveTrigger.addEventListener('click', () => room.close(), { once: true });
+    leaveTrigger.addEventListener('click', () => {
+      room.close()
+      document.getElementById('js-confirm').style.display = "inline-block";
+      document.getElementById('js-container').style.display = "none";
+    }, { once: true });
 
     function onClickSend() {
       // Send message to all of the peers in the room via websocket
@@ -166,3 +171,11 @@ const Peer = window.Peer;
 
   peer.on('error', console.error);
 })();
+
+$(function(){
+  $('#message_form').submit(function(){
+    socketio.emit('message', $('#input_msg').val());
+    $('#input_msg').val('');
+    return false;
+  })
+})
