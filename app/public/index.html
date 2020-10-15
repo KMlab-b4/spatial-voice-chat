@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-<!-- 入口 -->>
+<!-- 入口 -->
     <div class="entrance" id="js-entrance">
+      <br><br>
       <button id="js-confirm-create-trigger">作成</button>
       <button id="js-confirm-join-trigger">参加</button>
       <button id="js-entrance-setting-trigger">設定</button>
@@ -19,7 +20,7 @@
       <!--ユーザーネームを示す-->
       <input type="text" placeholder="User Name" id="js-username"><br>
 
-      <button id="js-join-trigger">Join</button>>
+      <button id="js-join-trigger">Join</button>
     </div>
 <!-- 通話 -->
     <div class="container" id="js-container" style="display: none;">
@@ -41,7 +42,7 @@
           <span id="js-room-mode"></span>:
           <button id="js-leave-trigger">Leave</button>
           <button id="js-mute-trigger">Mute</button>
-          <button id="js-room-setting-trigger"></button>
+          <button id="js-room-setting-trigger">設定</button>
         </div>
 
         <div class="remote-streams" id="js-remote-streams"></div>
@@ -53,11 +54,48 @@
         </div>
 
         <div>
+          <table>
+            <tr>
+              <td><button id="t00" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t01" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t02" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t03" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t04" class="table" onclick="moveObject(this)"></button></td>
+            </tr>
+            <tr>
+              <td><button id="t10" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t11" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t12" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t13" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t14" class="table" onclick="moveObject(this)"></button></td>
+            </tr>
+            <tr>
+              <td><button id="t20" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t21" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t22" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t23" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t24" class="table" onclick="moveObject(this)"></button></td>
+            </tr>
+            <tr>
+              <td><button id="t30" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t31" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t32" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t33" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t34" class="table" onclick="moveObject(this)"></button></td>
+            </tr>
+            <tr>
+              <td><button id="t40" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t41" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t42" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t43" class="table" onclick="moveObject(this)"></button></td>
+              <td><button id="t44" class="table" onclick="moveObject(this)"></button></td>
+            </tr>
+          </table>
           <form id="message_form">
             <input id="input_msg" autocomplete="off"/>
             <button>test Send</button>
           </form>
-        </div>>
+        </div>
       </div>
       <p class="meta" id="js-meta"></p>
     </div>

@@ -40,7 +40,7 @@ const socketio = io();
   const localStream = await navigator.mediaDevices
     .getUserMedia({
       audio: true,
-      video: true,
+      video: false,
     })
     .catch(console.error);
 
@@ -57,7 +57,8 @@ const socketio = io();
   //
   const peer = (window.peer = new Peer({
   //  key: window.__SKYWAY_KEY__,
-    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
+//    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
+    key: '8d501eb9-c573-41f4-9279-20e975f10712',
     /*
     debug の数字の意味
     0:none
@@ -109,12 +110,17 @@ const socketio = io();
     document.getElementById('js-confirm').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
 
+    let data = JSON.stringify({ name: userName.value, room: roomId.value, });
+    socketio.emit('join', data);
+
     // 部屋に参加する
     //
     const room = peer.joinRoom(roomId.value, {
       mode: getRoomModeByHash(),
       stream: localStream,
     });
+
+    
 
     // 新規に Peer がルームへ入室したときに発生
     room.once('open', () => {
@@ -179,8 +185,10 @@ const socketio = io();
     sendTrigger.addEventListener('click', onClickSend);
     leaveTrigger.addEventListener('click', () => {
       room.close()
-      document.getElementById('js-confirm').style.display = "inline-block";
+      document.getElementById('js-entrance').style.display = "inline-block";
       document.getElementById('js-container').style.display = "none";
+      roomId.value = '';
+      userName.value = '';
     }, { once: true });
 
     function onClickSend() {
@@ -203,5 +211,26 @@ $(function(){
     socketio.emit('message', $('#input_msg').val());
     $('#input_msg').val('');
     return false;
+  });
+
+  socketio.on('message', (msg) => {
+    console.log(msg);
   })
 })
+
+let id_value = '';
+let before_id = '';
+
+function moveObject(element) {
+  console.log(element.style.backgroundImage);
+  if (element.style.backgroundImage === '' || element.style.backgroundImage === 'url("img/none.jpg")') {
+    before_id = id_value;
+    id_value = element.id;
+    let data = JSON.stringify({
+      name: name,
+      id_value: id_value,
+      before_id: before_id
+    });
+    socketio.emit('move', data);
+  }
+}
