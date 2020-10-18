@@ -144,7 +144,7 @@ const socketio = io();
 
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
-      wVideo.setAttribute('data-peer-id', stream.peerId);
+      newVideo.setAttribute('data-peer-id', stream.peerId);
       remoteVideos.append(newVideo);
       await newVideo.play().catch(console.error);
     });
@@ -220,17 +220,39 @@ $(function(){
 
 let id_value = '';
 let before_id = '';
+let myPosition = {
+  id: '', // stream.peerId からskyway側のpeerIdをもらえる
+  x: '',
+  y: ''
+};
+let position = {
+  id: '',
+  x: '',
+  y: ''
+};
 
 function moveObject(element) {
   console.log(element.style.backgroundImage);
   if (element.style.backgroundImage === '' || element.style.backgroundImage === 'url("img/none.jpg")') {
     before_id = id_value;
     id_value = element.id;
+    myPosition = getPosition(element)
     let data = JSON.stringify({
       name: name,
       id_value: id_value,
-      before_id: before_id
+      before_id: before_id,
+      position: myPosition
     });
     socketio.emit('move', data);
   }
 }
+
+function getPosition(element) {
+  position.x = parseInt(element.id) % 10;
+  position.y = parseInt(element.id) / 10;
+  return position;
+}
+/*
+none.jpgの準備
+
+*/
