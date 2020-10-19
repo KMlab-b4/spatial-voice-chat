@@ -24,7 +24,12 @@ io.on('connection', (socket) => {
 		store.id = socket.id;
 
 		image = createIcon();
-		io.emit(store.id);
+
+		data = JSON.stringify({
+			name: store.name,
+			uid: store.id,
+		});
+		io.emit('join', data);
 		console.log('join to ' + store.room + ' with ' + store.name + ':' + store.id);
 	});
 
@@ -56,9 +61,9 @@ function createIcon () {
 	ctx.fill();
 	ctx.font = '10px Impact';
 	ctx.fillStyle = 'rgba(0,0,0,1.0)';
-	ctx.fillText(store.name, (100-ctx.measureText(name).width)/2, 50);
+	ctx.fillText(store.name, (100-ctx.measureText(store.name).width)/2, 50);
 
-	let canvasDataUrl = cavas.toDataUrl();
+	let canvasDataUrl = canvas.toDataURL();
 	let decoded = dataUriToBuffer(canvasDataUrl);
 	save = __dirname + '/public/img/' + store.id + '.jpg';
 	fs.writeFile(save, decoded, (err) => {

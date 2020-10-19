@@ -78,11 +78,6 @@ video {
   margin-top: 0;
 }
 
-<<<<<<< HEAD
-.table {
-  width: 105px;
-  height: 105px;
-=======
 /*デザイン*/
 #base {
   display: fles;
@@ -114,7 +109,6 @@ video {
 }
 
 .table {
-  width: 110px;
-  height: 110px;
->>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
+  width: 105px;
+  height: 105px;
 }

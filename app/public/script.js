@@ -7,13 +7,8 @@ let myPosition = {
   id: '', // stream.peerId からskyway側のpeerIdをもらえる
   x: '',
   y: '',
-  uid: ''
-};
-let position = {
-  id: '',
-  x: '',
-  y: '',
-  uid: ''
+  uid: '',
+  name: ''
 };
 
 (async function main() {
@@ -133,6 +128,7 @@ let position = {
     let data = JSON.stringify({ name: userName.value, room: roomId.value, });
     socketio.emit('join', data);
     myPosition.id = peer.id;
+    myPosition.name = userName.value;
 
 
     // 部屋に参加する
@@ -234,12 +230,12 @@ $(function(){
     socketio.emit('message', $('#input_msg').val());
     $('#input_msg').val('');
     return false;
-<<<<<<< HEAD
   });
 
   socketio.on('join', (msg) => {
-    console.log(msg);
-    position.uid = msg;
+    console.log('join:'+msg+":"+myPosition.name);
+    data = JSON.parse(msg);
+    if (myPosition.name === data.name) myPosition.uid = data.uid;
   });
 
   socketio.on('move', (msg) => {
@@ -253,8 +249,10 @@ $(function(){
         document.getElementById(data.before_id).style.backgroundImage = "url(img/none.jpg)";
       }
       document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
     } else {
       document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
     }
   });
 
@@ -264,6 +262,15 @@ $(function(){
 
 })
 
+function changeVolume(data) {
+  x = myPosition.x - data.x;
+  y = myPosition.y - data.y;
+  ans = x*x + y*y;
+  console.log('distance:'+ans);
+  console.log(myPosition.name+':'+data.name)
+  // 音量の変更
+}
+
 function moveObject(element) {
   console.log(element.style.backgroundImage);
   if (element.style.backgroundImage === '' || element.style.backgroundImage === 'url("img/none.jpg")') {
@@ -271,13 +278,13 @@ function moveObject(element) {
     id_value = element.id;
     getPosition(element);
     let data = JSON.stringify({
-      name: name,
+      name: myPosition.name,
       id_value: id_value,
       before_id: before_id,
       x: myPosition.x,
       y: myPosition.y,
       peerId: myPosition.id,
-      uid: position.uid
+      uid: myPosition.uid
     });
     socketio.emit('move', data);
   }
@@ -286,14 +293,8 @@ function moveObject(element) {
 function getPosition(element) {
   myPosition.x = Number(element.id) % 10;
   myPosition.y = parseInt(Number(element.id) / 10);
-  console.log(myPosition)
 }
 
 /*
 none.jpgの準備
-
 */
-=======
-  })
-})
->>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
