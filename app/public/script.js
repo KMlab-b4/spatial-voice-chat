@@ -61,9 +61,6 @@ let myPosition = {
   localVideo.playsInline = true;
   await localVideo.play().catch(console.error);
 
-  // 音声のみミュート
-  localStream.getAudioTracks().forEach((track) => (track.enabled = false));
-
   // eslint-disable-next-line require-atomic-updates
   //
   const peer = (window.peer = new Peer({
