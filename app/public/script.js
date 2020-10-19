@@ -22,6 +22,7 @@ const socketio = io();
   const roomSetting = document.getElementById('js-room-setting-trigger');
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
+  const returnConfirm = document.getElementById('js-return-trigger');
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -40,7 +41,7 @@ const socketio = io();
   const localStream = await navigator.mediaDevices
     .getUserMedia({
       audio: true,
-      video: true,
+      video: false,
     })
     .catch(console.error);
 
@@ -91,6 +92,10 @@ const socketio = io();
   returnRoom.addEventListener('click', () => {
     document.getElementById('js-setting').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
+  });
+  returnConfirm.addEventListener('click', () => {
+    document.getElementById('js-confirm').style.display = "none";
+    document.getElementById('js-entrance').style.display = "inline-block";
   });
 
   // Register join handler
@@ -177,6 +182,7 @@ const socketio = io();
     });
 
     sendTrigger.addEventListener('click', onClickSend);
+    
     leaveTrigger.addEventListener('click', () => {
       room.close()
       document.getElementById('js-confirm').style.display = "inline-block";
