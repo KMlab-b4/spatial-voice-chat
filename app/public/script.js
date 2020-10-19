@@ -23,6 +23,10 @@ const socketio = io();
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
 
+  //webaudio
+  const audioContext = new AudioContext();
+  var gainNodes = [];
+
   meta.innerText = `
     UA: ${navigator.userAgent}
     SDK: ${sdkSrc ? sdkSrc.src : 'unknown'}
@@ -50,8 +54,8 @@ const socketio = io();
   localVideo.playsInline = true;
   await localVideo.play().catch(console.error);
 
-  // 音声のみミュート
-  localStream.getAudioTracks().forEach((track) => (track.enabled = false));
+  // 音声のみミュート //追記:音声のみミュートはlocalVideo.muted = true; で為されているので不要
+  //localStream.getAudioTracks().forEach((track) => (track.enabled = false));
 
   // eslint-disable-next-line require-atomic-updates
   //
@@ -105,6 +109,9 @@ const socketio = io();
       return;
     }
 
+    //audioContextの再呼び出し
+    audioContext.resume();
+
     // 表示の切り替え
     document.getElementById('js-confirm').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
@@ -132,13 +139,19 @@ const socketio = io();
     // ルームに Join している他のユーザの
     // ストリームを受信した時に発生
     room.on('stream', async stream => {
+      //new 音量変更nodeを配列に保存
+      gainNodes.push(createGainNode(audioContext, stream));
+
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
 
+      //new videoをmute
+      newVideo.muted = true;
+
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
-      wVideo.setAttribute('data-peer-id', stream.peerId);
+      newVideo.setAttribute('data-peer-id', stream.peerId);
       remoteVideos.append(newVideo);
       await newVideo.play().catch(console.error);
     });
@@ -193,6 +206,11 @@ const socketio = io();
       messages.textContent += `${userName.value}: ${localText.value}\n`;
       localText.value = '';
     }
+  });
+
+  //new
+  muteBtn.addEventListener('click', () => {
+    allMute(gainNodes);
   });
 
   peer.on('error', console.error);
