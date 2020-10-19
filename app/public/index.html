@@ -9,7 +9,11 @@
   <body>
 <!-- 入口 -->
     <div class="entrance" id="js-entrance">
+<<<<<<< HEAD
       <br><br>
+=======
+      エントランス<br>
+>>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
       <button id="js-confirm-create-trigger">作成</button>
       <button id="js-confirm-join-trigger">参加</button>
       <button id="js-entrance-setting-trigger">設定</button>
@@ -20,13 +24,19 @@
       <!--ユーザーネームを示す-->
       <input type="text" placeholder="User Name" id="js-username"><br>
 
+<<<<<<< HEAD
       <button id="js-join-trigger">Join</button>
+=======
+      <button id="js-join-trigger">入室</button>
+      <button id="js-return-trigger">戻る</button>
+>>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
     </div>
 <!-- 通話 -->
     <div class="container" id="js-container" style="display: none;">
       <h1 class="heading">Room example</h1>
+      <!--
       <p class="note">
-        <!--モードをsfuに固定するために一時コメントアウト
+        モードをsfuに固定するために一時コメントアウト
         Change Room mode (before join in a room):
         -->
         <!--meshかsfuかを選択させる-->
@@ -34,9 +44,10 @@
         <a href="#">mesh</a> / <a href="#sfu">sfu</a>
         
         <a href="#sfu">sfu</a>
-        -->
-      </p>
+
+      </p> -->
       <div class="room">
+<<<<<<< HEAD
         <div>
           <video id="js-local-stream"></video>
           <span id="js-room-mode"></span>:
@@ -44,15 +55,73 @@
           <button id="js-mute-trigger">Mute</button>
           <button id="js-room-setting-trigger">設定</button>
         </div>
+=======
+        <div id="base">
+          <div id="layout01">
+            <!--mainフレーム-->
+            <div id="layout01_01">
+              <!--ます目のやつ-->
+>>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
 
-        <div class="remote-streams" id="js-remote-streams"></div>
+              <table>
+                <tr>
+                  <td><button id="00" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="01" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="02" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="03" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="04" class="table" onclick="moveObject(this)"></button></td>
+                </tr>
+                <tr>
+                  <td><button id="10" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="11" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="12" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="13" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="14" class="table" onclick="moveObject(this)"></button></td>
+                </tr>
+                <tr>
+                  <td><button id="20" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="21" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="22" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="23" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="24" class="table" onclick="moveObject(this)"></button></td>
+                </tr>
+                <tr>
+                  <td><button id="30" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="31" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="32" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="33" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="34" class="table" onclick="moveObject(this)"></button></td>
+                </tr>
+                <tr>
+                  <td><button id="40" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="41" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="42" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="43" class="table" onclick="moveObject(this)"></button></td>
+                  <td><button id="44" class="table" onclick="moveObject(this)"></button></td>
+                </tr>
+              </table>
 
-        <div>
-          <pre class="messages" id="js-messages"></pre>
-          <input type="text" id="js-local-text">
-          <button id="js-send-trigger">Send</button>
+              <video id="js-local-stream" style="display: none;"></video>
+              <span id="js-room-mode"></span>:
+            </div>
+            <!--subフレーム-->
+            <div id="layout01_02">
+              <button id="js-leave-trigger">退室</button>
+              <button id="js-mute-trigger">ミュート</button>
+              <button id="js-room-setting-trigger">設定</button>
+            </div>
+          </div>
+          <!--memberフレーム-->
+          <div id="layout02">
+            <!--memberを書くんだけど、とりあえず保留-->
+            <pre class="messages" id="js-messages"></pre>
+            <input type="text" id="js-local-text">
+            <button id="js-send-trigger">送信</button>
+          </div>
         </div>
 
+        <div class="remote-streams" id="js-remote-streams"></div>
+<!--
         <div>
           <table>
             <tr>
@@ -96,12 +165,17 @@
             <button>test Send</button>
           </form>
         </div>
+<<<<<<< HEAD
+=======
+      -->
+
+>>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
       </div>
       <p class="meta" id="js-meta"></p>
     </div>
 <!-- 設定 -->
     <div id="js-setting" style="display: none;">
-      設定
+      設定<br>
       <button id="js-return-entrance-trigger">Entranceに戻る</button>
       <button id="js-return-room-trigger">Roomに戻る</button>
     </div>

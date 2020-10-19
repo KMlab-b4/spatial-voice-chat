@@ -37,6 +37,7 @@ let position = {
   const roomSetting = document.getElementById('js-room-setting-trigger');
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
+  const returnConfirm = document.getElementById('js-return-trigger');
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -107,6 +108,10 @@ let position = {
   returnRoom.addEventListener('click', () => {
     document.getElementById('js-setting').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
+  });
+  returnConfirm.addEventListener('click', () => {
+    document.getElementById('js-confirm').style.display = "none";
+    document.getElementById('js-entrance').style.display = "inline-block";
   });
 
   // Register join handler
@@ -200,6 +205,7 @@ let position = {
     });
 
     sendTrigger.addEventListener('click', onClickSend);
+    
     leaveTrigger.addEventListener('click', () => {
       room.close()
       document.getElementById('js-entrance').style.display = "inline-block";
@@ -228,6 +234,7 @@ $(function(){
     socketio.emit('message', $('#input_msg').val());
     $('#input_msg').val('');
     return false;
+<<<<<<< HEAD
   });
 
   socketio.on('join', (msg) => {
@@ -286,3 +293,7 @@ function getPosition(element) {
 none.jpgの準備
 
 */
+=======
+  })
+})
+>>>>>>> 016a33ea4ca70d066d646b2118ccfc318acc4ff9
