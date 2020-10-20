@@ -1,6 +1,18 @@
 const Peer = window.Peer;
 const socketio = io();
 
+let id_value = '';
+let before_id = '';
+let myPosition = {
+  id: '', // stream.peerId からskyway側のpeerIdをもらえる
+  x: '',
+  y: '',
+  uid: '',
+  name: ''
+};
+const audioContext = new AudioContext();
+var gainNodes = [];
+
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
   const joinTrigger = document.getElementById('js-join-trigger');
@@ -25,8 +37,7 @@ const socketio = io();
   const returnConfirm = document.getElementById('js-return-trigger');
 
   //webaudio
-  const audioContext = new AudioContext();
-  var gainNodes = [];
+  
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -55,13 +66,12 @@ const socketio = io();
   localVideo.playsInline = true;
   await localVideo.play().catch(console.error);
 
-  
-
   // eslint-disable-next-line require-atomic-updates
   //
   const peer = (window.peer = new Peer({
   //  key: window.__SKYWAY_KEY__,
-    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
+//    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
+    key: '8d501eb9-c573-41f4-9279-20e975f10712',
     /*
     debug の数字の意味
     0:none
@@ -120,12 +130,20 @@ const socketio = io();
     document.getElementById('js-confirm').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
 
+    let data = JSON.stringify({ name: userName.value, room: roomId.value, });
+    socketio.emit('join', data);
+    myPosition.id = peer.id;
+    myPosition.name = userName.value;
+
+
     // 部屋に参加する
     //
     const room = peer.joinRoom(roomId.value, {
       mode: getRoomModeByHash(),
       stream: localStream,
     });
+
+    
 
     // 新規に Peer がルームへ入室したときに発生
     room.once('open', () => {
@@ -197,8 +215,10 @@ const socketio = io();
     
     leaveTrigger.addEventListener('click', () => {
       room.close()
-      document.getElementById('js-confirm').style.display = "inline-block";
+      document.getElementById('js-entrance').style.display = "inline-block";
       document.getElementById('js-container').style.display = "none";
+      roomId.value = '';
+      userName.value = '';
     }, { once: true });
 
     function onClickSend() {
@@ -226,5 +246,78 @@ $(function(){
     socketio.emit('message', $('#input_msg').val());
     $('#input_msg').val('');
     return false;
-  })
+  });
+
+  socketio.on('join', (msg) => {
+    console.log('join:'+msg+":"+myPosition.name);
+    data = JSON.parse(msg);
+    if (myPosition.name === data.name) myPosition.uid = data.uid;
+  });
+
+  socketio.on('move', (msg) => {
+    console.log(msg);
+
+    let data = JSON.parse(msg);
+
+    if (data.before_id) {
+      let beforeBackgroundImageUrl = document.getElementById(data.before_id).style.backgroundImage;
+      if (beforeBackgroundImageUrl === ('url("img/' + data.uid+'.jpg")')) {
+        document.getElementById(data.before_id).style.backgroundImage = "url(img/none.jpg)";
+      }
+      document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
+    } else {
+      document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
+    }
+  });
+
+  socketio.on('message', (msg) => {
+    console.log(msg);
+  });
+
 })
+
+function changeVolume(data) {
+  x = myPosition.x - data.x;
+  y = myPosition.y - data.y;
+  ans = x*x + y*y;
+  console.log('distance:'+ans);
+  console.log(myPosition.name+':'+data.name)
+  // 音量の変更
+  for(let i = 0; i < gainNodes.length; i++){
+    if(gainNodes[i].id == data.peerId){
+      gainNodes[i].node.gain.value = 1/ans;
+    }
+  }
+}
+
+function moveObject(element) {
+  console.log(element.style.backgroundImage);
+  if (element.style.backgroundImage === '' || element.style.backgroundImage === 'url("img/none.jpg")') {
+    before_id = id_value;
+    id_value = element.id;
+    getPosition(element);
+    let data = JSON.stringify({
+      name: myPosition.name,
+      id_value: id_value,
+      before_id: before_id,
+      x: myPosition.x,
+      y: myPosition.y,
+      peerId: myPosition.id,
+      uid: myPosition.uid
+    });
+    socketio.emit('move', data);
+  }
+}
+
+function getPosition(element) {
+  myPosition.x = Number(element.id) % 10;
+  myPosition.y = parseInt(Number(element.id) / 10);
+}
+
+
+
+/*
+none.jpgの準備
+*/
