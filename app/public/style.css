@@ -30,19 +30,19 @@ video {
 }
 
 /* p2p-media styles */
-.p2p-media {
+/*.p2p-media {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-.p2p-media .remote-stream {
+/*.p2p-media .remote-stream {
   width: 50%;
-}
+}*/
 
-.p2p-media .local-stream {
+/*.p2p-media .local-stream {
   width: 30%;
-}
+}*/
 
 /* p2p-data styles */
 .p2p-data {
@@ -66,10 +66,10 @@ video {
   margin: 0 8px;
 }
 
-.room .remote-streams {
+/*.room .remote-streams {
   /*background-color: #f6fbff;*/
-  background-color: white;
-}
+  /*background-color: white;
+}*/
 
 .room .messages {
   background-color: #eee;

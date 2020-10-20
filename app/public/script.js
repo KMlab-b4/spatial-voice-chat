@@ -55,8 +55,7 @@ const socketio = io();
   localVideo.playsInline = true;
   await localVideo.play().catch(console.error);
 
-  // 音声のみミュート //追記:音声のみミュートはlocalVideo.muted = true; で為されているので不要
-  //localStream.getAudioTracks().forEach((track) => (track.enabled = false));
+  
 
   // eslint-disable-next-line require-atomic-updates
   //
@@ -147,7 +146,7 @@ const socketio = io();
       //new 音量変更nodeを配列に保存
       gainNodes.push(createGainNode(audioContext, stream));
 
-      const newVideo = document.createElement('video');
+      const newVideo = document.createElement('audio');//video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
 
