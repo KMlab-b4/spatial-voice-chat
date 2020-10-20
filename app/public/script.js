@@ -10,6 +10,8 @@ let myPosition = {
   uid: '',
   name: ''
 };
+const audioContext = new AudioContext();
+var gainNodes = [];
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -33,6 +35,9 @@ let myPosition = {
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
   const returnConfirm = document.getElementById('js-return-trigger');
+
+  //webaudio
+  
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -118,6 +123,9 @@ let myPosition = {
       return;
     }
 
+    //audioContextの再呼び出し
+    audioContext.resume();
+
     // 表示の切り替え
     document.getElementById('js-confirm').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
@@ -153,9 +161,15 @@ let myPosition = {
     // ルームに Join している他のユーザの
     // ストリームを受信した時に発生
     room.on('stream', async stream => {
-      const newVideo = document.createElement('video');
+      //new 音量変更nodeを配列に保存
+      gainNodes.push(createGainNode(audioContext, stream));
+
+      const newVideo = document.createElement('audio');//video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
+
+      //new videoをmute
+      newVideo.muted = true;
 
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
@@ -219,6 +233,11 @@ let myPosition = {
     }
   });
 
+  //new
+  muteBtn.addEventListener('click', () => {
+    allMute(gainNodes);
+  });
+
   peer.on('error', console.error);
 })();
 
@@ -266,6 +285,11 @@ function changeVolume(data) {
   console.log('distance:'+ans);
   console.log(myPosition.name+':'+data.name)
   // 音量の変更
+  for(let i = 0; i < gainNodes.length; i++){
+    if(gainNodes[i].id == data.peerId){
+      gainNodes[i].node.gain.value = 1/ans;
+    }
+  }
 }
 
 function moveObject(element) {
@@ -291,6 +315,8 @@ function getPosition(element) {
   myPosition.x = Number(element.id) % 10;
   myPosition.y = parseInt(Number(element.id) / 10);
 }
+
+
 
 /*
 none.jpgの準備
