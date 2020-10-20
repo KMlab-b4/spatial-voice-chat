@@ -9,13 +9,14 @@
   <body>
 <!-- 入口 -->
     <div class="entrance" id="js-entrance">
-      エントランス<br>
+      <h1 class="heading">エントランス</h1>
       <button id="js-confirm-create-trigger">作成</button>
       <button id="js-confirm-join-trigger">参加</button>
       <button id="js-entrance-setting-trigger">設定</button>
     </div>
 <!-- 確認 -->
     <div id="js-confirm" style="display: none;">
+      <h1 class="heading">部屋作成</h1>
       <input type="text" placeholder="Room Name" id="js-room-id">
       <!--ユーザーネームを示す-->
       <input type="text" placeholder="User Name" id="js-username"><br>
@@ -117,7 +118,13 @@
     </div>
 <!-- 設定 -->
     <div id="js-setting" style="display: none;">
-      設定<br>
+      設定画面<br>
+      <div class="select">
+        <label for="audioSource">マイク選択: </label><select id="audioSource"></select>
+      </div>
+      <div class="select">
+        <label for="audioOutput">スピーカー選択: </label><select id="audioOutput"></select>
+    　</div>
       <button id="js-return-entrance-trigger">Entranceに戻る</button>
       <button id="js-return-room-trigger">Roomに戻る</button>
     </div>
