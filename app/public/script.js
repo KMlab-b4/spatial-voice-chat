@@ -162,7 +162,7 @@ var gainNodes = [];
     // ストリームを受信した時に発生
     room.on('stream', async stream => {
       //new 音量変更nodeを配列に保存
-      gainNodes.push(createGainNode(audioContext, stream));
+      gainNodes.push(createGainNode(stream));
 
       const newVideo = document.createElement('audio');//video');
       newVideo.srcObject = stream;
@@ -235,7 +235,7 @@ var gainNodes = [];
 
   //new
   muteBtn.addEventListener('click', () => {
-    allMute(gainNodes);
+    allMute();
   });
 
   peer.on('error', console.error);
@@ -314,6 +314,27 @@ function moveObject(element) {
 function getPosition(element) {
   myPosition.x = Number(element.id) % 10;
   myPosition.y = parseInt(Number(element.id) / 10);
+}
+
+
+function createGainNode(stream) {
+  const gainNode = audioContext.createGain();
+  const source = audioContext.createMediaStreamSource(stream);
+  source.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  gainNode.gain.value =1;
+
+  return {id: stream.peerId, node: gainNode};
+}
+
+function allMute() {
+  for(let i = 0; i < gainNodes.length; i++){
+    if(gainNodes[i].node.gain.value){
+      gainNodes[i].node.gain.value = 0;
+    }else{
+      gainNodes[i].node.gain.value = 1;
+    }
+  }
 }
 
 
