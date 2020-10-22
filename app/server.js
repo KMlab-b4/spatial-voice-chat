@@ -4,10 +4,31 @@ let http = require('http').Server(app);
 let Canvas = require('canvas');
 let fs = require('fs');
 let dataUriToBuffer = require('data-uri-to-buffer');
+let glob = require('glob');
 const io = require('socket.io')(http);
 const PORT = process.env.PORT || 8080;
 
+let none = 'app/public/img/none.jpg'
+
 app.use( express.static(__dirname + '/public'));
+
+glob('**/img/*.jpg', function (err, files) {
+	if(err) {
+		console.log(err)
+	}
+	console.log(files)
+	files.filter(file => {
+		if (file != 'app/public/img/none.jpg') {
+			fs.unlink(file, (err) => {
+				if (err) msg=err
+				else msg='all deteled.'
+				console.log(msg)
+			})
+		}
+	})
+})
+
+
 
 io.on('connection', (socket) => {
 
@@ -45,6 +66,12 @@ io.on('connection', (socket) => {
 
 	socket.on('disconnect', () => {
 		console.log(socket.id + ' is disconnected.');
+		deleted = __dirname + '/public/img/' + store.id + '.jpg';
+		fs.unlink(deleted, (err) => {
+			if (err) msg=err
+			else msg=socket.id+' deteled.'
+			console.log(msg)
+		})
 	});
 });
 

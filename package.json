@@ -24,6 +24,7 @@
     "canvas": "^2.6.1",
     "data-uri-to-buffer": "^3.0.1",
     "express": "^4.17.1",
+    "glob": "^7.1.6",
     "node-gyp": "^7.1.2",
     "skyway-js": "^3.0.2",
     "socket.io": "^2.3.0"
