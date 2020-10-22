@@ -12,6 +12,7 @@ let myPosition = {
 };
 const audioContext = new AudioContext();
 var gainNodes = [];
+var muteFlag = false;
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -195,6 +196,12 @@ var gainNodes = [];
       remoteVideo.srcObject.getTracks().forEach(track => track.stop());
       remoteVideo.srcObject = null;
       remoteVideo.remove();
+      for(let i = 0; i < gainNodes.length; i++){
+        if(gainNodes[i].id == peerId){
+          gainNodes.splice(i, 1);
+          break;
+        }
+      }
 
       messages.textContent += `=== ${userName.value} left ===\n`;
     });
@@ -219,6 +226,7 @@ var gainNodes = [];
       document.getElementById('js-container').style.display = "none";
       roomId.value = '';
       userName.value = '';
+      gainNodes = [];
     }, { once: true });
 
     function onClickSend() {
@@ -287,7 +295,11 @@ function changeVolume(data) {
   // 音量の変更
   for(let i = 0; i < gainNodes.length; i++){
     if(gainNodes[i].id == data.peerId){
-      gainNodes[i].node.gain.value = 1/ans;
+      gainNodes[i].volume = 1/ans;
+      if(!muteFlag){
+        gainNodes[i].node.gain.value = gainNodes[i].volume;
+      }
+      break;
     }
   }
 }
@@ -322,19 +334,20 @@ function createGainNode(stream) {
   const source = audioContext.createMediaStreamSource(stream);
   source.connect(gainNode);
   gainNode.connect(audioContext.destination);
-  gainNode.gain.value =1;
+  gainNode.gain.value =0;
 
-  return {id: stream.peerId, node: gainNode};
+  return {id: stream.peerId, node: gainNode, volume: 0};
 }
 
 function allMute() {
   for(let i = 0; i < gainNodes.length; i++){
-    if(gainNodes[i].node.gain.value){
+    if(!muteFlag){
       gainNodes[i].node.gain.value = 0;
     }else{
-      gainNodes[i].node.gain.value = 1;
+      gainNodes[i].node.gain.value = gainNodes[i].volume;
     }
   }
+  muteFlag = !muteFlag;
 }
 
 
