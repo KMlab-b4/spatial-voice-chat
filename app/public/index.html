@@ -9,24 +9,45 @@
   <body>
 <!-- 入口 -->
     <div class="entrance" id="js-entrance">
-      <h1 class="heading">エントランス</h1>
-      <button id="js-confirm-create-trigger">作成</button>
-      <button id="js-confirm-join-trigger">参加</button>
-      <button id="js-entrance-setting-trigger">設定</button>
+      <h2 class="heading">エントランス</h2><br>
+      <div style="text-align: center;">
+      <button id="js-confirm-create-trigger" class="btn-square">作成</button>
+      <button id="js-confirm-join-trigger" class="btn-square">参加</button>
+      <button id="js-entrance-setting-trigger" class="btn-square">設定</button>
+      </div>
+      <br><div style="text-align: center;">
+        作成：部屋を作成します。(作成する部屋名と使用するユーザー名を入力してもらいます。)<br>
+        参加：部屋に参加します。(参加する部屋名と使用するユーザー名を入力してもらいます。)<br>
+        設定：マイク、スピーカーの選択などを行います。<br>
+      </div>
     </div>
 <!-- 確認 -->
     <div id="js-confirm" style="display: none;">
-      <h1 class="heading">部屋作成</h1>
-      <input type="text" placeholder="Room Name" id="js-room-id">
-      <!--ユーザーネームを示す-->
-      <input type="text" placeholder="User Name" id="js-username"><br>
+      <h2 class="heading">部屋作成</h2>
 
-      <button id="js-join-trigger">入室</button>
-      <button id="js-return-trigger">戻る</button>
+      <div class="cp_iptxt">
+        <input class="ef" type="text" placeholder="Room Name" id="js-room-id">
+        <label>🏠</label>
+        <span class="focus_line"></span>
+      </div>
+      <!--
+        <input type="text" placeholder="Room Name" id="js-room-id">
+      -->
+      <!--ユーザーネームを示す-->
+      <div class="cp_iptxt">
+        <input class="ef" type="text" placeholder="User Name" id="js-username">
+        <label>👤</label>
+        <span class="focus_line"></span>
+      </div>
+      <!--
+      <input type="text" placeholder="User Name" id="js-username"><br>
+      -->
+      <button id="js-join-trigger" class="btn-square">入室</button>
+      <button id="js-return-trigger" class="btn-square">戻る</button>
     </div>
 <!-- 通話 -->
     <div class="container" id="js-container" style="display: none;">
-      <h1 class="heading">Room example</h1>
+      <h1 class="heading"></h1>
       <!--
       <p class="note">
         モードをsfuに固定するために一時コメントアウト
