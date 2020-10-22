@@ -37,6 +37,7 @@ var muteFlag = false;
   const returnRoom = document.getElementById('js-return-room-trigger');
   const returnConfirm = document.getElementById('js-return-trigger');
 
+
   //webaudio
   
 
@@ -245,7 +246,7 @@ var muteFlag = false;
   });
 
   peer.on('error', console.error);
-});
+}) ();
 
 $(function(){
   $('#message_form').submit(function(){
