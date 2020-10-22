@@ -69,9 +69,7 @@ var gainNodes = [];
   // eslint-disable-next-line require-atomic-updates
   //
   const peer = (window.peer = new Peer({
-  //  key: window.__SKYWAY_KEY__,
-//    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
-    key: '8d501eb9-c573-41f4-9279-20e975f10712',
+    key: window.__SKYWAY_KEY__,
     /*
     debug の数字の意味
     0:none
@@ -239,7 +237,7 @@ var gainNodes = [];
   });
 
   peer.on('error', console.error);
-})();
+});
 
 $(function(){
   $('#message_form').submit(function(){
