@@ -12,6 +12,7 @@ let myPosition = {
 };
 const audioContext = new AudioContext();
 var gainNodes = [];
+var muteFlag = false;
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -35,6 +36,7 @@ var gainNodes = [];
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
   const returnConfirm = document.getElementById('js-return-trigger');
+
 
   //webaudio
   
@@ -160,7 +162,7 @@ var gainNodes = [];
     // ストリームを受信した時に発生
     room.on('stream', async stream => {
       //new 音量変更nodeを配列に保存
-      gainNodes.push(createGainNode(audioContext, stream));
+      gainNodes.push(createGainNode(stream));
 
       const newVideo = document.createElement('audio');//video');
       newVideo.srcObject = stream;
@@ -193,6 +195,12 @@ var gainNodes = [];
       remoteVideo.srcObject.getTracks().forEach(track => track.stop());
       remoteVideo.srcObject = null;
       remoteVideo.remove();
+      for(let i = 0; i < gainNodes.length; i++){
+        if(gainNodes[i].id == peerId){
+          gainNodes.splice(i, 1);
+          break;
+        }
+      }
 
       messages.textContent += `=== ${userName.value} left ===\n`;
     });
@@ -217,6 +225,7 @@ var gainNodes = [];
       document.getElementById('js-container').style.display = "none";
       roomId.value = '';
       userName.value = '';
+      gainNodes = [];
     }, { once: true });
 
     function onClickSend() {
@@ -233,11 +242,11 @@ var gainNodes = [];
 
   //new
   muteBtn.addEventListener('click', () => {
-    allMute(gainNodes);
+    allMute();
   });
 
   peer.on('error', console.error);
-});
+}) ();
 
 $(function(){
   $('#message_form').submit(function(){
@@ -285,7 +294,11 @@ function changeVolume(data) {
   // 音量の変更
   for(let i = 0; i < gainNodes.length; i++){
     if(gainNodes[i].id == data.peerId){
-      gainNodes[i].node.gain.value = 1/ans;
+      gainNodes[i].volume = 1/ans;
+      if(!muteFlag){
+        gainNodes[i].node.gain.value = gainNodes[i].volume;
+      }
+      break;
     }
   }
 }
@@ -312,6 +325,28 @@ function moveObject(element) {
 function getPosition(element) {
   myPosition.x = Number(element.id) % 10;
   myPosition.y = parseInt(Number(element.id) / 10);
+}
+
+
+function createGainNode(stream) {
+  const gainNode = audioContext.createGain();
+  const source = audioContext.createMediaStreamSource(stream);
+  source.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  gainNode.gain.value =0;
+
+  return {id: stream.peerId, node: gainNode, volume: 0};
+}
+
+function allMute() {
+  for(let i = 0; i < gainNodes.length; i++){
+    if(!muteFlag){
+      gainNodes[i].node.gain.value = 0;
+    }else{
+      gainNodes[i].node.gain.value = gainNodes[i].volume;
+    }
+  }
+  muteFlag = !muteFlag;
 }
 
 
