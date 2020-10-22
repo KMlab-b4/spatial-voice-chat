@@ -122,6 +122,7 @@ var muteFlag = false;
     if (!peer.open) {
       return;
     }
+    $('h1').text("Room:"+roomId.value);
 
     //audioContextの再呼び出し
     audioContext.resume();
