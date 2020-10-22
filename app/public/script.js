@@ -1,6 +1,19 @@
 const Peer = window.Peer;
 const socketio = io();
 
+let id_value = '';
+let before_id = '';
+let myPosition = {
+  id: '', // stream.peerId からskyway側のpeerIdをもらえる
+  x: '',
+  y: '',
+  uid: '',
+  name: ''
+};
+const audioContext = new AudioContext();
+var gainNodes = [];
+var muteFlag = false;
+
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
   const joinTrigger = document.getElementById('js-join-trigger');
@@ -23,6 +36,10 @@ const socketio = io();
   const returnEntrance = document.getElementById('js-return-entrance-trigger');
   const returnRoom = document.getElementById('js-return-room-trigger');
   const returnConfirm = document.getElementById('js-return-trigger');
+
+
+  //webaudio
+  
 
   meta.innerText = `
     UA: ${navigator.userAgent}
@@ -51,14 +68,10 @@ const socketio = io();
   localVideo.playsInline = true;
   await localVideo.play().catch(console.error);
 
-  // 音声のみミュート
-  localStream.getAudioTracks().forEach((track) => (track.enabled = false));
-
   // eslint-disable-next-line require-atomic-updates
   //
   const peer = (window.peer = new Peer({
-  //  key: window.__SKYWAY_KEY__,
-    key: 'd0292763-ff35-4514-9d7e-2347ffe2068c',
+    key: window.__SKYWAY_KEY__,
     /*
     debug の数字の意味
     0:none
@@ -109,10 +122,20 @@ const socketio = io();
     if (!peer.open) {
       return;
     }
+    $('h1').text("Room:"+roomId.value);
+
+    //audioContextの再呼び出し
+    audioContext.resume();
 
     // 表示の切り替え
     document.getElementById('js-confirm').style.display = "none";
     document.getElementById('js-container').style.display = "inline-block";
+
+    let data = JSON.stringify({ name: userName.value, room: roomId.value, });
+    socketio.emit('join', data);
+    myPosition.id = peer.id;
+    myPosition.name = userName.value;
+
 
     // 部屋に参加する
     //
@@ -120,6 +143,8 @@ const socketio = io();
       mode: getRoomModeByHash(),
       stream: localStream,
     });
+
+    
 
     // 新規に Peer がルームへ入室したときに発生
     room.once('open', () => {
@@ -137,13 +162,19 @@ const socketio = io();
     // ルームに Join している他のユーザの
     // ストリームを受信した時に発生
     room.on('stream', async stream => {
-      const newVideo = document.createElement('video');
+      //new 音量変更nodeを配列に保存
+      gainNodes.push(createGainNode(stream));
+
+      const newVideo = document.createElement('audio');//video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
 
+      //new videoをmute
+      newVideo.muted = true;
+
       // mark peerId to find it later at peerLeave event
       // peerIDをマークして、後でpeerLeaveイベントで見つける
-      wVideo.setAttribute('data-peer-id', stream.peerId);
+      newVideo.setAttribute('data-peer-id', stream.peerId);
       remoteVideos.append(newVideo);
       await newVideo.play().catch(console.error);
     });
@@ -165,6 +196,12 @@ const socketio = io();
       remoteVideo.srcObject.getTracks().forEach(track => track.stop());
       remoteVideo.srcObject = null;
       remoteVideo.remove();
+      for(let i = 0; i < gainNodes.length; i++){
+        if(gainNodes[i].id == peerId){
+          gainNodes.splice(i, 1);
+          break;
+        }
+      }
 
       messages.textContent += `=== ${userName.value} left ===\n`;
     });
@@ -185,8 +222,11 @@ const socketio = io();
     
     leaveTrigger.addEventListener('click', () => {
       room.close()
-      document.getElementById('js-confirm').style.display = "inline-block";
+      document.getElementById('js-entrance').style.display = "inline-block";
       document.getElementById('js-container').style.display = "none";
+      roomId.value = '';
+      userName.value = '';
+      gainNodes = [];
     }, { once: true });
 
     function onClickSend() {
@@ -201,13 +241,117 @@ const socketio = io();
     }
   });
 
+  //new
+  muteBtn.addEventListener('click', () => {
+    allMute();
+  });
+
   peer.on('error', console.error);
-})();
+}) ();
 
 $(function(){
   $('#message_form').submit(function(){
     socketio.emit('message', $('#input_msg').val());
     $('#input_msg').val('');
     return false;
-  })
+  });
+
+  socketio.on('join', (msg) => {
+    console.log('join:'+msg+":"+myPosition.name);
+    data = JSON.parse(msg);
+    if (myPosition.name === data.name) myPosition.uid = data.uid;
+  });
+
+  socketio.on('move', (msg) => {
+    console.log(msg);
+
+    let data = JSON.parse(msg);
+
+    if (data.before_id) {
+      let beforeBackgroundImageUrl = document.getElementById(data.before_id).style.backgroundImage;
+      if (beforeBackgroundImageUrl === ('url("img/' + data.uid+'.jpg")')) {
+        document.getElementById(data.before_id).style.backgroundImage = "url(img/none.jpg)";
+      }
+      document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
+    } else {
+      document.getElementById(data.id_value).style.backgroundImage = "url(img/" + data.uid + ".jpg)";
+      if(myPosition.name != data.name)changeVolume(data);
+    }
+  });
+
+  socketio.on('message', (msg) => {
+    console.log(msg);
+  });
+
 })
+
+function changeVolume(data) {
+  x = myPosition.x - data.x;
+  y = myPosition.y - data.y;
+  ans = x*x + y*y;
+  console.log('distance:'+ans);
+  console.log(myPosition.name+':'+data.name)
+  // 音量の変更
+  for(let i = 0; i < gainNodes.length; i++){
+    if(gainNodes[i].id == data.peerId){
+      gainNodes[i].volume = 1/ans;
+      if(!muteFlag){
+        gainNodes[i].node.gain.value = gainNodes[i].volume;
+      }
+      break;
+    }
+  }
+}
+
+function moveObject(element) {
+  console.log(element.style.backgroundImage);
+  if (element.style.backgroundImage === '' || element.style.backgroundImage === 'url("img/none.jpg")') {
+    before_id = id_value;
+    id_value = element.id;
+    getPosition(element);
+    let data = JSON.stringify({
+      name: myPosition.name,
+      id_value: id_value,
+      before_id: before_id,
+      x: myPosition.x,
+      y: myPosition.y,
+      peerId: myPosition.id,
+      uid: myPosition.uid
+    });
+    socketio.emit('move', data);
+  }
+}
+
+function getPosition(element) {
+  myPosition.x = Number(element.id) % 10;
+  myPosition.y = parseInt(Number(element.id) / 10);
+}
+
+
+function createGainNode(stream) {
+  const gainNode = audioContext.createGain();
+  const source = audioContext.createMediaStreamSource(stream);
+  source.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  gainNode.gain.value =0;
+
+  return {id: stream.peerId, node: gainNode, volume: 0};
+}
+
+function allMute() {
+  for(let i = 0; i < gainNodes.length; i++){
+    if(!muteFlag){
+      gainNodes[i].node.gain.value = 0;
+    }else{
+      gainNodes[i].node.gain.value = gainNodes[i].volume;
+    }
+  }
+  muteFlag = !muteFlag;
+}
+
+
+
+/*
+none.jpgの準備
+*/
